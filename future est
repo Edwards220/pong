@@ -1,0 +1,12 @@
+print('Hello! This is the life calculator')
+age=input("Your Age!?:")
+
+age_number = int(age)
+future_years = 85 - age_number
+future_days = future_years*365
+future_months = future_years*12
+future_weeks = future_years*52
+
+message = (f"You have {future_days} and {future_weeks} weeks, and {future_months} in the future !")
+
+print(message)
