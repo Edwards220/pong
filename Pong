@@ -1,0 +1,117 @@
+from turtle import Turtle
+from turtle import Screen 
+import time
+
+
+class Pong(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.color("grey")
+        self.shape("circle")
+        self.penup()
+        self.x_move = 6
+        self.y_move = 6
+        self.move_speed = 0.4
+
+    def move(self):
+        new_x = self.xcor() + self.x_move
+        new_y = self.ycor() + self.y_move
+        self.goto(new_x, new_y)
+
+    def bounce_y(self):
+        self.y_move *= -1
+
+    def bounce_x(self):
+        self.x_move *= -1
+        self.move_speed *= 0.3
+
+    def reset_position(self):
+        self.goto(0, 0)
+        self.move_speed = 0.1
+        self.bounce_x()
+
+class Paddle(Turtle):
+    
+    def __init__(self, position):
+        super().__init__()
+        self.shape("square")
+        self.color("white")
+        self.shapesize(stretch_wid=5, stretch_len=1)
+        self.penup()
+        self.goto(position)
+
+    def go_up(self):
+        new_y = self.ycor() + 22
+        self.goto(self.xcor(), new_y)
+
+    def go_down(self):
+        new_y = self.ycor() - 22
+        self.goto(self.xcor(), new_y)
+
+class Score(Turtle):
+
+    def __init__(self):
+        super().__init__()
+        self.color("white")
+        self.penup()
+        self.hideturtle()
+        self.lf_score = 0
+        self.rh_score = 0
+        self.score()
+
+    def score(self):
+        self.clear()
+        self.goto(-100, 200)
+        self.write(self.lf_score, align="center", font=("AvantGarde-Book", 80, "normal"))
+        self.goto(100, 200)
+        self.write(self.rh_score, align="center", font=("AvantGarde-Book", 80, "normal"))
+
+    def lf_point(self):
+        self.lf_score += 1
+        self.score()
+
+    def rh_point(self):
+        self.rh_score += 1
+        self.score()
+
+screen = Screen()
+screen.bgcolor("black")
+screen.setup(width=800, height=600)
+screen.title("Ping-Pong")
+screen.tracer(0)
+
+rh_pad = Paddle((350, 0))
+lf_pad = Paddle((-350, 0))
+Pong = Pong()
+score = Score()
+
+screen.listen()
+screen.onkey(rh_pad.go_up, "Up")
+screen.onkey(rh_pad.go_down, "Down")
+screen.onkey(lf_pad.go_up, "w")
+screen.onkey(lf_pad.go_down, "s")
+
+pong_game_is_on = True
+while pong_game_is_on:
+    time.sleep(0.1)
+    screen.update()
+    Pong.move()
+
+    if Pong.ycor() > 280 or Pong.ycor() < -280:
+        Pong.bounce_y()
+
+    
+    if Pong.distance(rh_pad) < 50 and Pong.xcor() > 320 or Pong.distance(lf_pad) < 50 and Pong.xcor() < -320:
+        Pong.bounce_x()
+
+    if Pong.xcor() > 380:
+        Pong.reset_position()
+        score.lf_point()
+
+    if Pong.xcor() < -380:
+        Pong.restart()
+        score.rh_point()
+
+screen.exitonclick()
+
