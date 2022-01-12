@@ -1,0 +1,8 @@
+print("Lets get Fit!! Hello This is the BMI calculator!")
+
+current_height=input("Enter your height in m:")
+current_weight=input("Enter your weight in kg:")
+
+bmi=int(current_weight)/float(current_height)**2
+bmi_number=int(bmi)
+print(bmi_number)
