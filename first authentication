@@ -1,0 +1,18 @@
+class User:
+    def __init__(self,name):
+        self.name=name
+        self.is_logged_in=False
+
+def authenticated(function):
+    def wrapper(*args,**kwargs):
+        if args[0].authenticated==True:
+            function(args[0])
+    return wrapper
+
+@authenticated
+def library_granted(User):
+    print(f"You now have access to the library inventory {User.name}!")
+
+created_user=User('Ishad')
+created_user.authenticated=True
+library_granted(created_user)
